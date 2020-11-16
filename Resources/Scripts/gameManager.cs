@@ -17,6 +17,14 @@ class BattleshipGrid
     {
         blocks = new List<Block>();
     }
+
+    public void makeClickable()
+    {
+        foreach (Block b in blocks)
+        {
+            b.toptile.AddComponent<playerBoxController>();
+        }
+    }
 }
 
 class Block
@@ -66,6 +74,7 @@ public class gameManager : MonoBehaviour
         playerGrid = GenerateGrid(anchor);
         playerGrid.parent.transform.position = new Vector3(-10f, -10f);
         playerGrid.parent.transform.localScale = new Vector3(1.5f, 1.5f);
+        playerGrid.makeClickable();
 
         enemyGrid = GenerateGrid(anchor2);
         enemyGrid.parent.transform.position = new Vector3(10f, 10f);
@@ -114,9 +123,13 @@ public class gameManager : MonoBehaviour
                 b.bottomtile = Instantiate(sq, new Vector3(xcoord, ycoord), Quaternion.identity);
                 b.toptile = Instantiate(sq, new Vector3(xcoord, ycoord), Quaternion.identity);
                 b.toptile.transform.localScale = new Vector3(0.8f, 0.8f);
+                b.toptile.name = "TopTile";
+                b.toptile.AddComponent<BoxCollider2D>();
+                b.toptile.GetComponent<BoxCollider2D>().isTrigger = true;
                 b.bottomtile.GetComponent<SpriteRenderer>().color = Color.black;
                 b.toptile.transform.SetParent(parentObject.transform);
                 b.bottomtile.transform.SetParent(parentObject.transform);
+                b.bottomtile.name = "BottomTile";
                 grid.blocks.Add(b);
 
             }
