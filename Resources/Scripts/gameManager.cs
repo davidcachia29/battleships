@@ -23,6 +23,8 @@ class BattleshipGrid
         foreach (Block b in blocks)
         {
             b.toptile.AddComponent<playerBoxController>();
+            b.setClickCoordinates();
+           
         }
     }
 }
@@ -30,10 +32,20 @@ class BattleshipGrid
 class Block
 {
     public GameObject toptile,bottomtile;
+    public int indexX, indexY;
 
     public void flipTile()
     {
 
+    }
+
+    public void setClickCoordinates()
+    {
+        if (toptile.GetComponent<playerBoxController>()!=null)
+        {
+            toptile.GetComponent<playerBoxController>().indexX = indexX;
+            toptile.GetComponent<playerBoxController>().indexY = indexY;
+        }
     }
 
   
@@ -87,7 +99,8 @@ public class gameManager : MonoBehaviour
 
     BattleshipGrid GenerateGrid(GameObject parentObject)
     {
-        int counter = 0;
+        int rowcounter = 0;
+        int columncounter = 0;
         int lettercounter = 0;
         BattleshipGrid grid = new BattleshipGrid();
 
@@ -95,9 +108,9 @@ public class gameManager : MonoBehaviour
         {
             //for each row
 
-            counter++;
+            rowcounter++;
             rowL = Instantiate(rowLabel, new Vector3(-5.5f, ycoord), Quaternion.identity);
-            rowL.GetComponentInChildren<Text>().text = counter.ToString();
+            rowL.GetComponentInChildren<Text>().text = rowcounter.ToString();
             rowL.transform.SetParent(parentObject.transform);
             //rowL.transform.GetChild(0).transform.position = new Vector3(-2f, ycoord));
 
@@ -118,7 +131,7 @@ public class gameManager : MonoBehaviour
                     lettercounter++;
                 }
 
-
+                columncounter++;
                 Block b = new Block();
                 b.bottomtile = Instantiate(sq, new Vector3(xcoord, ycoord), Quaternion.identity);
                 b.toptile = Instantiate(sq, new Vector3(xcoord, ycoord), Quaternion.identity);
@@ -130,9 +143,13 @@ public class gameManager : MonoBehaviour
                 b.toptile.transform.SetParent(parentObject.transform);
                 b.bottomtile.transform.SetParent(parentObject.transform);
                 b.bottomtile.name = "BottomTile";
+                b.indexX = columncounter;
+                b.indexY = rowcounter;
+                
                 grid.blocks.Add(b);
 
             }
+            columncounter = 0;
         }
         grid.parent = parentObject;
         return grid;

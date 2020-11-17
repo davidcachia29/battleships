@@ -6,10 +6,12 @@ public class playerBoxController : MonoBehaviour
 {
     bool highlighted = false;
     Color currentColor;
+    public int indexX, indexY;
 
     private void Start()
     {
         currentColor = GetComponent<SpriteRenderer>().color;
+        
     }
 
     void OnMouseDown()
@@ -17,7 +19,9 @@ public class playerBoxController : MonoBehaviour
         // Destroy the gameObject after clicking on it
         highlighted = !highlighted;
 
-        Debug.Log(highlighted);
+        //  Debug.Log(highlighted);
+
+        Debug.Log(indexX + " " + indexY);
 
         if(highlighted)
         {
