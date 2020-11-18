@@ -12,16 +12,40 @@ public class playerBoxController : MonoBehaviour
     {
         currentColor = GetComponent<SpriteRenderer>().color;
         
+        
     }
 
-    void OnMouseDown()
+
+
+
+    void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            //horizontal
+            Debug.Log("Horizontal"+indexX + " " + indexY);
+            flipColor();
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            //horizontal
+            Debug.Log("Vertical" + indexX + " " + indexY);
+            flipColor();
+        }
+
+
+    }
+
+    void flipColor()
     {
         // Destroy the gameObject after clicking on it
         highlighted = !highlighted;
 
+
+
         //  Debug.Log(highlighted);
 
-        Debug.Log(indexX + " " + indexY);
+       
 
         if(highlighted)
         {
