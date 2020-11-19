@@ -112,17 +112,17 @@ public class gameManager : MonoBehaviour
 
     Button createWorldButton(string label,GameObject parent,Vector3 pos)
     {
-        GameObject theButton = Instantiate(Resources.Load<GameObject>("Prefabs/myButton"), pos, Quaternion.identity);
-        theButton.transform.SetParent(parent.transform);
-        theButton.GetComponentInChildren<Text>().text = label;
+        GameObject theCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/myButton"), pos, Quaternion.identity);
+        theCanvas.transform.SetParent(parent.transform);
+        theCanvas.GetComponentInChildren<Text>().text = label;
 
-        theButton.name = label;
+        theCanvas.name = label;
 
-        theButton.GetComponent<Canvas>().worldCamera = Camera.main;
+        theCanvas.GetComponent<Canvas>().worldCamera = Camera.main;
 
-        theButton.GetComponent<Canvas>().sortingOrder = 1;
+        theCanvas.GetComponent<Canvas>().sortingOrder = 1;
 
-        return theButton.GetComponentInChildren<Button>();
+        return theCanvas.GetComponentInChildren<Button>();
 
        
     }
