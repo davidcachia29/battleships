@@ -122,7 +122,7 @@ public class gameManager : MonoBehaviour
 
         theButton.GetComponent<Canvas>().sortingOrder = 1;
 
-        return theButton.GetComponent<Button>();
+        return theButton.GetComponentInChildren<Button>();
 
        
     }
@@ -147,7 +147,7 @@ public class gameManager : MonoBehaviour
         Ship submarine = new Ship(3);
         Ship destroyer = new Ship(2);
 
-
+        
         allships[4] = carrier;
         allships[3] = battleship;
         allships[2] = cruiser;
@@ -172,6 +172,12 @@ public class gameManager : MonoBehaviour
 
 
         Button carrierButton = createWorldButton("Carrier", anchor3,new Vector3(0f,0f));
+
+        carrierButton.onClick.AddListener(
+            ()=>{
+                Debug.Log("Carrier");
+            }
+        );
 
 
         Button battleshipButton = createWorldButton("Battleship", anchor3, new Vector3(0f, -3f));
