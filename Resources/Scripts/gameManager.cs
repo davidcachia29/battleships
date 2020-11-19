@@ -5,6 +5,21 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+// Next step today:
+
+// A list of ships displayed next to the player grid
+// Carrier - 5 blocks
+// Battleship - 4 blocks
+// Cruiser - 3 blocks
+// Submarine - 3 blocks (different colour?)
+// Destroyer - 2 blocks
+
+// When clicked, select that ship (for example 5 blocks)
+// if you left click on the player grid, 5 blocks reserved HORIZONTALLY
+// if you right click on the player grid, 5 blocks reserved VERTICALLY
+// if ship doesn't fit, write a debug.log stating that the ship doesn't fit and leave it selected
+
+
 
 class BattleshipGrid
 {
@@ -121,7 +136,7 @@ public class gameManager : MonoBehaviour
 
             for (float xcoord = -4.5f; xcoord <= 4.5f; xcoord++)
             {
-                //first row
+                //first row at the top
                 if (ycoord == 4.5f)
                 {
                     
