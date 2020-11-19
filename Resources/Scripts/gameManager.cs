@@ -21,6 +21,33 @@ using UnityEngine.UI;
 
 
 
+class Ship
+{
+    int numberofblocks;
+  
+    bool vertical;
+    bool placed;
+
+
+    public Ship(int blocks)
+    {
+        numberofblocks = blocks;
+        vertical = false;
+        placed = false;
+
+    }
+
+    public void place(int x,int y,bool orientation)
+    {
+
+    }
+}
+
+
+
+
+
+
 class BattleshipGrid
 {
 
@@ -75,10 +102,30 @@ public class gameManager : MonoBehaviour
 
     BattleshipGrid playerGrid, enemyGrid;
 
-    GameObject rowLabel, rowL;
+    GameObject rowLabel, rowL, buttonPrefab;
 
 
     GameObject sq;
+
+    Ship[] allships;
+
+
+    Button createWorldButton(string label,GameObject parent,Vector3 pos)
+    {
+        GameObject theButton = Instantiate(Resources.Load<GameObject>("Prefabs/myButton"), pos, Quaternion.identity);
+        theButton.transform.SetParent(parent.transform);
+        theButton.GetComponentInChildren<Text>().text = label;
+
+        theButton.name = label;
+
+        theButton.GetComponent<Canvas>().worldCamera = Camera.main;
+
+        theButton.GetComponent<Canvas>().sortingOrder = 1;
+
+        return theButton.GetComponent<Button>();
+
+       
+    }
 
 
 
@@ -89,19 +136,67 @@ public class gameManager : MonoBehaviour
 
         rowLabel = Resources.Load<GameObject>("Prefabs/TextPrefab");
 
+        buttonPrefab = Resources.Load<GameObject>("Prefabs/myButton");
+
+
+        allships = new Ship[5];
+
+        Ship carrier = new Ship(5);
+        Ship battleship = new Ship(4);
+        Ship cruiser = new Ship(3);
+        Ship submarine = new Ship(3);
+        Ship destroyer = new Ship(2);
+
+
+        allships[4] = carrier;
+        allships[3] = battleship;
+        allships[2] = cruiser;
+        allships[1] = submarine;
+        allships[0] = destroyer;
 
 
 
         GameObject anchor = new GameObject("playergrid");
         GameObject anchor2 = new GameObject("enemygrid");
+        GameObject anchor3 = new GameObject("shipselectiongrid");
 
 
 
-
+        //draw player grid
         playerGrid = GenerateGrid(anchor);
         playerGrid.parent.transform.position = new Vector3(-10f, -10f);
         playerGrid.parent.transform.localScale = new Vector3(1.5f, 1.5f);
         playerGrid.makeClickable();
+
+        //ship selection grid
+
+
+        Button carrierButton = createWorldButton("Carrier", anchor3,new Vector3(0f,0f));
+
+
+        Button battleshipButton = createWorldButton("Battleship", anchor3, new Vector3(0f, -3f));
+
+        Button submarineButton = createWorldButton("Submarine", anchor3, new Vector3(0f, -6f));
+
+
+        Button cruiserButton = createWorldButton("Cruiser", anchor3, new Vector3(0f, -9f));
+
+        Button destroyerButton = createWorldButton("Destroyer", anchor3, new Vector3(0f, -12f));
+
+       
+
+
+
+       
+      
+        anchor3.transform.position = new Vector3(10f, -4f);
+
+
+
+
+
+
+
 
         enemyGrid = GenerateGrid(anchor2);
         enemyGrid.parent.transform.position = new Vector3(10f, 10f);
