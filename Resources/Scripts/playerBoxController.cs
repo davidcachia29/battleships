@@ -8,9 +8,14 @@ public class playerBoxController : MonoBehaviour
     Color currentColor;
     public int indexX, indexY;
 
+    gameManager gm;
+
     private void Start()
     {
         currentColor = GetComponent<SpriteRenderer>().color;
+
+        gm = Camera.main.GetComponent<gameManager>();
+
         
         
     }
@@ -24,13 +29,19 @@ public class playerBoxController : MonoBehaviour
         {
             //horizontal
             Debug.Log("Horizontal"+indexX + " " + indexY);
-            flipColor();
+
+            gm.currentlySelectedShip.place(indexX, indexY, false,gm.playerGrid);
+
+
+          //  flipColor();
         }
         if (Input.GetMouseButtonDown(1))
         {
             //horizontal
             Debug.Log("Vertical" + indexX + " " + indexY);
-            flipColor();
+
+            gm.currentlySelectedShip.place(indexX, indexY, true,gm.playerGrid);
+          //  flipColor();
         }
 
 

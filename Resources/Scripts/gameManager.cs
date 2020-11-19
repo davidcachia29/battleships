@@ -21,10 +21,10 @@ using UnityEngine.UI;
 
 
 
-class Ship
+public class Ship
 {
     int numberofblocks;
-  
+
     bool vertical;
     bool placed;
 
@@ -37,8 +37,90 @@ class Ship
 
     }
 
-    public void place(int x,int y,bool orientation)
+    bool checkFree(int x, int y, BattleshipGrid g, bool orientation)
     {
+        if (!orientation)
+        {
+            foreach (Block b in g.blocks)
+            {
+                if (b.indexX >= x && b.indexX < x + numberofblocks && b.indexY == y)
+                {
+                    if (b.filled)
+                    {
+                        return false;
+                    }
+                }
+
+            }
+        }
+        else
+        {
+            foreach (Block b in g.blocks)
+            {
+                if (b.indexY >= y && b.indexY < y + numberofblocks && b.indexX == x)
+                {
+                    if (b.filled)
+                    {
+                        return false;
+                    }
+                }
+
+            }
+        }
+        return true;
+
+    }
+
+    public void place(int x, int y, bool orientation, BattleshipGrid grid)
+    {
+        if (!placed)
+        {
+            if (!orientation)
+            {
+                //horizontal
+                if (x + numberofblocks <= 10)
+                {
+                    //should fit horizontally, if no ships in the way
+                    if (checkFree(x, y, grid, false))
+                    {
+
+                        foreach (Block b in grid.blocks)
+                        {
+                            if (b.indexX >= x && b.indexX < x + numberofblocks && b.indexY == y)
+                            {
+
+                                b.toptile.GetComponent<SpriteRenderer>().color = Color.blue;
+                                b.filled = true;
+                            }
+                        }
+                        placed = true;
+                    }
+
+                }
+
+            }
+            else
+            {
+                if (y + numberofblocks <= 10)
+                {
+                    if (checkFree(x, y, grid, true))
+                    {
+                        foreach (Block b in grid.blocks)
+                        {
+                            //should fit vertically, if no ships in the way
+                            if (b.indexY >= y && b.indexY < y + numberofblocks && b.indexX == x)
+                            {
+
+                                b.toptile.GetComponent<SpriteRenderer>().color = Color.blue;
+                                b.filled = true;
+                            }
+                        }
+                        placed = true;
+                    }
+                }
+
+            }
+        }
 
     }
 }
@@ -48,7 +130,7 @@ class Ship
 
 
 
-class BattleshipGrid
+public class BattleshipGrid
 {
 
     public List<Block> blocks;
@@ -66,15 +148,22 @@ class BattleshipGrid
         {
             b.toptile.AddComponent<playerBoxController>();
             b.setClickCoordinates();
-           
+
         }
     }
 }
 
-class Block
+public class Block
 {
-    public GameObject toptile,bottomtile;
+    public GameObject toptile, bottomtile;
     public int indexX, indexY;
+    public bool filled;
+
+
+    public Block()
+    {
+        filled = false;
+    }
 
     public void flipTile()
     {
@@ -83,14 +172,14 @@ class Block
 
     public void setClickCoordinates()
     {
-        if (toptile.GetComponent<playerBoxController>()!=null)
+        if (toptile.GetComponent<playerBoxController>() != null)
         {
             toptile.GetComponent<playerBoxController>().indexX = indexX;
             toptile.GetComponent<playerBoxController>().indexY = indexY;
         }
     }
 
-  
+
 
 }
 
@@ -100,7 +189,7 @@ class Block
 public class gameManager : MonoBehaviour
 {
 
-    BattleshipGrid playerGrid, enemyGrid;
+    public BattleshipGrid playerGrid, enemyGrid;
 
     GameObject rowLabel, rowL, buttonPrefab;
 
@@ -109,8 +198,13 @@ public class gameManager : MonoBehaviour
 
     Ship[] allships;
 
+    public Ship currentlySelectedShip;
 
-    Button createWorldButton(string label,GameObject parent,Vector3 pos)
+
+
+
+
+    Button createWorldButton(string label, GameObject parent, Vector3 pos)
     {
         GameObject theCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/myButton"), pos, Quaternion.identity);
         theCanvas.transform.SetParent(parent.transform);
@@ -124,7 +218,7 @@ public class gameManager : MonoBehaviour
 
         return theCanvas.GetComponentInChildren<Button>();
 
-       
+
     }
 
 
@@ -147,7 +241,7 @@ public class gameManager : MonoBehaviour
         Ship submarine = new Ship(3);
         Ship destroyer = new Ship(2);
 
-        
+
         allships[4] = carrier;
         allships[3] = battleship;
         allships[2] = cruiser;
@@ -171,23 +265,32 @@ public class gameManager : MonoBehaviour
         //ship selection grid
 
 
-        Button carrierButton = createWorldButton("Carrier", anchor3,new Vector3(0f,0f));
+        Button carrierButton = createWorldButton("Carrier", anchor3, new Vector3(0f, 0f));
 
         carrierButton.onClick.AddListener(
-            ()=>{
+            () =>
+            {
                 Debug.Log("Carrier");
+
+                //carrierButton.enabled = false;
+                currentlySelectedShip = allships[4];
+
+
             }
         );
 
 
-        
+
 
 
         Button battleshipButton = createWorldButton("Battleship", anchor3, new Vector3(0f, -3f));
 
         battleshipButton.onClick.AddListener(
-            ()=>{
+            () =>
+            {
                 Debug.Log("Battleship");
+
+                currentlySelectedShip = allships[3];
             }
         );
 
@@ -195,31 +298,40 @@ public class gameManager : MonoBehaviour
         Button submarineButton = createWorldButton("Submarine", anchor3, new Vector3(0f, -6f));
 
         submarineButton.onClick.AddListener(
-            ()=>{
+            () =>
+            {
                 Debug.Log("Submarine");
+
+                currentlySelectedShip = allships[2];
             }
         );
 
         Button cruiserButton = createWorldButton("Cruiser", anchor3, new Vector3(0f, -9f));
 
         cruiserButton.onClick.AddListener(
-            ()=>{
+            () =>
+            {
                 Debug.Log("Cruiser");
+
+                currentlySelectedShip = allships[1];
             }
         );
 
         Button destroyerButton = createWorldButton("Destroyer", anchor3, new Vector3(0f, -12f));
 
         destroyerButton.onClick.AddListener(
-            ()=>{
+            () =>
+            {
                 Debug.Log("Destroyer");
+
+                currentlySelectedShip = allships[0];
             }
         );
 
 
 
-       
-      
+
+
         anchor3.transform.position = new Vector3(10f, -4f);
 
 
@@ -235,7 +347,7 @@ public class gameManager : MonoBehaviour
     }
 
 
-    string [] letters = {"A","B","C","D","E","F","G","H","I","J"};
+    string[] letters = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
 
 
     BattleshipGrid GenerateGrid(GameObject parentObject)
@@ -255,8 +367,8 @@ public class gameManager : MonoBehaviour
             rowL.transform.SetParent(parentObject.transform);
             //rowL.transform.GetChild(0).transform.position = new Vector3(-2f, ycoord));
 
-            
-            
+
+
 
 
 
@@ -265,7 +377,7 @@ public class gameManager : MonoBehaviour
                 //first row at the top
                 if (ycoord == 4.5f)
                 {
-                    
+
                     rowL = Instantiate(rowLabel, new Vector3(xcoord, 5.5f), Quaternion.identity);
                     rowL.GetComponentInChildren<Text>().text = letters[lettercounter];
                     rowL.transform.SetParent(parentObject.transform);
@@ -286,7 +398,7 @@ public class gameManager : MonoBehaviour
                 b.bottomtile.name = "BottomTile";
                 b.indexX = columncounter;
                 b.indexY = rowcounter;
-                
+
                 grid.blocks.Add(b);
 
             }
@@ -300,6 +412,6 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
