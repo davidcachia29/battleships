@@ -180,16 +180,41 @@ public class gameManager : MonoBehaviour
         );
 
 
+        
+
+
         Button battleshipButton = createWorldButton("Battleship", anchor3, new Vector3(0f, -3f));
+
+        battleshipButton.onClick.AddListener(
+            ()=>{
+                Debug.Log("Battleship");
+            }
+        );
+
 
         Button submarineButton = createWorldButton("Submarine", anchor3, new Vector3(0f, -6f));
 
+        submarineButton.onClick.AddListener(
+            ()=>{
+                Debug.Log("Submarine");
+            }
+        );
 
         Button cruiserButton = createWorldButton("Cruiser", anchor3, new Vector3(0f, -9f));
 
+        cruiserButton.onClick.AddListener(
+            ()=>{
+                Debug.Log("Cruiser");
+            }
+        );
+
         Button destroyerButton = createWorldButton("Destroyer", anchor3, new Vector3(0f, -12f));
 
-       
+        destroyerButton.onClick.AddListener(
+            ()=>{
+                Debug.Log("Destroyer");
+            }
+        );
 
 
 
