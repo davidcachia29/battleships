@@ -24,7 +24,8 @@ using UnityEngine.UI;
 public class Ship
 {
     int numberofblocks;
-
+    Color backColor;
+    
     bool vertical;
     bool placed;
 
@@ -34,7 +35,13 @@ public class Ship
         numberofblocks = blocks;
         vertical = false;
         placed = false;
+        backColor = Color.red;
 
+    }
+
+    public void setBackColor(Color newcolor)
+    {
+        backColor = newcolor;
     }
 
     bool checkFree(int x, int y, BattleshipGrid g, bool orientation)
@@ -89,7 +96,8 @@ public class Ship
                             if (b.indexX >= x && b.indexX < x + numberofblocks && b.indexY == y)
                             {
 
-                                b.toptile.GetComponent<SpriteRenderer>().color = Color.blue;
+                                b.toptile.GetComponent<SpriteRenderer>().color = Color.grey;
+                                b.bottomtile.GetComponent<SpriteRenderer>().color = this.backColor;
                                 b.filled = true;
                             }
                         }
@@ -111,7 +119,8 @@ public class Ship
                             if (b.indexY >= y && b.indexY < y + numberofblocks && b.indexX == x)
                             {
 
-                                b.toptile.GetComponent<SpriteRenderer>().color = Color.blue;
+                                b.toptile.GetComponent<SpriteRenderer>().color = Color.grey;
+                                b.bottomtile.GetComponent<SpriteRenderer>().color = this.backColor;
                                 b.filled = true;
                             }
                         }
@@ -192,6 +201,7 @@ public class gameManager : MonoBehaviour
     public BattleshipGrid playerGrid, enemyGrid;
 
     GameObject rowLabel, rowL, buttonPrefab;
+
 
 
     GameObject sq;
@@ -301,7 +311,7 @@ public class gameManager : MonoBehaviour
             () =>
             {
                 Debug.Log("Submarine");
-
+                allships[2].setBackColor(Color.blue);
                 currentlySelectedShip = allships[2];
             }
         );
