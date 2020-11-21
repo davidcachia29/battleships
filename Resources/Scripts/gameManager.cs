@@ -192,6 +192,33 @@ public class Block
 
 }
 
+public class gameSession
+{
+    //has the game started?
+    bool gameStarted,isMyTurn;
+
+    //number of shots fired
+    int shotsFired;
+
+    //blocks hit (to change color)
+    List<Block> hitBlocks;
+
+    //for hits
+    public BattleshipGrid enemyGrid;
+
+    public IEnumerator checkIfMyTurn()
+    {
+        //will be updating my turn
+        yield return null;
+    }
+
+    void fireShot()
+    {
+
+    }
+
+}
+
 
 
 
