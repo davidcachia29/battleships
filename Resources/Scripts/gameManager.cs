@@ -27,7 +27,7 @@ public class Ship
     Color backColor;
     
     bool vertical;
-    bool placed;
+    public bool placed;
 
 
     public Ship(int blocks)
@@ -203,19 +203,63 @@ public class gameSession
     //blocks hit (to change color)
     List<Block> hitBlocks;
 
+    Ship[] theShips;
+
+    GameObject timer;
+
+
+
+
     //for hits
     public BattleshipGrid enemyGrid;
 
+    public gameSession(Ship[] allShips,GameObject timer)
+    {
+        this.timer = timer;
+    }
+
+    bool areAllShipsPlaced()
+    {
+        foreach (Ship s in theShips)
+        {
+            if (!s.placed)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public IEnumerator checkIfMyTurn()
     {
-        //will be updating my turn
-        yield return null;
+        while (true)
+        {
+            if (areAllShipsPlaced())
+            {
+                //start rounds
+                
+
+            }
+            yield return null; 
+        }
     }
 
     void fireShot()
     {
 
     }
+
+    IEnumerator updateTimer()
+    {
+        while(isMyTurn)
+        {
+
+        }
+
+        yield return null;
+    }
+
+
 
 }
 
@@ -227,7 +271,7 @@ public class gameManager : MonoBehaviour
 
     public BattleshipGrid playerGrid, enemyGrid;
 
-    GameObject rowLabel, rowL, buttonPrefab;
+    GameObject rowLabel, rowL, buttonPrefab,timerText;
 
 
 
@@ -268,6 +312,10 @@ public class gameManager : MonoBehaviour
         rowLabel = Resources.Load<GameObject>("Prefabs/TextPrefab");
 
         buttonPrefab = Resources.Load<GameObject>("Prefabs/myButton");
+
+        
+
+        timerText = rowLabel;
 
 
         allships = new Ship[5];
@@ -311,6 +359,7 @@ public class gameManager : MonoBehaviour
 
                 //carrierButton.enabled = false;
                 currentlySelectedShip = allships[4];
+                
 
 
             }
@@ -366,7 +415,7 @@ public class gameManager : MonoBehaviour
         );
 
 
-
+       
 
 
         anchor3.transform.position = new Vector3(10f, -4f);
@@ -381,6 +430,13 @@ public class gameManager : MonoBehaviour
         enemyGrid = GenerateGrid(anchor2);
         enemyGrid.parent.transform.position = new Vector3(10f, 10f);
         enemyGrid.parent.transform.localScale = new Vector3(1.5f, 1.5f);
+
+
+        GameObject theTimer = Instantiate(timerText, new Vector3(9f, 8f), Quaternion.identity);
+
+        gameSession session = new gameSession(allships,theTimer);
+
+        StartCoroutine(session.checkIfMyTurn());
     }
 
 
