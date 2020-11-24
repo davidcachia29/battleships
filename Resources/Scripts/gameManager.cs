@@ -162,6 +162,18 @@ public class BattleshipGrid
 
         }
     }
+
+    public void makeClickableEnemy()
+    {
+        foreach (Block b in blocks)
+        {
+            b.toptile.AddComponent<enemyBoxController>();
+            b.setClickCoordinates();
+
+        }
+    }
+
+
 }
 
 public class Block
@@ -260,7 +272,7 @@ public class gameManager : MonoBehaviour
 
     GameObject rowLabel, rowL, buttonPrefab,timerText,theTimer;
 
-    gameSession session;
+    public gameSession session;
 
     bool timerrunning = false;
 
@@ -472,6 +484,7 @@ public class gameManager : MonoBehaviour
         enemyGrid = GenerateGrid(anchor2);
         enemyGrid.parent.transform.position = new Vector3(10f, 10f);
         enemyGrid.parent.transform.localScale = new Vector3(1.5f, 1.5f);
+        enemyGrid.makeClickableEnemy();
 
 
         theTimer = Instantiate(timerText, new Vector3(-18f, 19f), Quaternion.identity);
@@ -485,6 +498,12 @@ public class gameManager : MonoBehaviour
       
     }
 
+
+    public IEnumerator waitForTurn()
+    {
+        yield return new WaitForSeconds(10f);
+        session.isMyTurn = true;
+    }
 
     string[] letters = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
 
