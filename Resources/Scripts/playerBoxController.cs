@@ -28,7 +28,7 @@ public class playerBoxController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //horizontal
-            Debug.Log("Horizontal"+indexX + " " + indexY);
+            Debug.Log("Horizontal: "+indexX + " " + indexY);
 
             gm.currentlySelectedShip.place(indexX, indexY, false,gm.playerGrid);
 
@@ -38,7 +38,7 @@ public class playerBoxController : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             //horizontal
-            Debug.Log("Vertical" + indexX + " " + indexY);
+            Debug.Log("Vertical: " + indexX + " " + indexY);
 
             gm.currentlySelectedShip.place(indexX, indexY, true,gm.playerGrid);
           //  flipColor();

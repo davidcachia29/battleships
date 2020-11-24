@@ -80,12 +80,13 @@ public class Ship
 
     public void place(int x, int y, bool orientation, BattleshipGrid grid)
     {
+        //does not allow me to place a ship twice
         if (!placed)
         {
             if (!orientation)
             {
-                //horizontal
-                if (x + numberofblocks <= 10)
+                //horizontal --*
+                if (x + (numberofblocks-1) <= 10)
                 {
                     //should fit horizontally, if no ships in the way
                     if (checkFree(x, y, grid, false))
@@ -109,7 +110,8 @@ public class Ship
             }
             else
             {
-                if (y + numberofblocks <= 10)
+                //*
+                if (y + (numberofblocks-1) <= 10)
                 {
                     if (checkFree(x, y, grid, true))
                     {
@@ -355,8 +357,6 @@ public class gameManager : MonoBehaviour
 
         buttonPrefab = Resources.Load<GameObject>("Prefabs/myButton");
 
-        
-
         timerText = rowLabel;
 
 
@@ -535,6 +535,7 @@ public class gameManager : MonoBehaviour
                 b.toptile.transform.SetParent(parentObject.transform);
                 b.bottomtile.transform.SetParent(parentObject.transform);
                 b.bottomtile.name = "BottomTile";
+                //setting the indexes of the blocks
                 b.indexX = columncounter;
                 b.indexY = rowcounter;
 
