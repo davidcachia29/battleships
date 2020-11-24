@@ -195,7 +195,7 @@ public class Block
 public class gameSession
 {
     //has the game started?
-    bool gameStarted,isMyTurn;
+    public bool gameStarted,isMyTurn;
 
     //number of shots fired
     int shotsFired;
@@ -205,7 +205,7 @@ public class gameSession
 
     Ship[] theShips;
 
-    GameObject timer;
+   
 
 
 
@@ -213,12 +213,12 @@ public class gameSession
     //for hits
     public BattleshipGrid enemyGrid;
 
-    public gameSession(Ship[] allShips,GameObject timer)
+    public gameSession(Ship[] allShips)
     {
-        this.timer = timer;
+        theShips = allShips;
     }
 
-    bool areAllShipsPlaced()
+    public bool areAllShipsPlaced()
     {
         foreach (Ship s in theShips)
         {
@@ -230,34 +230,19 @@ public class gameSession
         return true;
     }
 
-    public IEnumerator checkIfMyTurn()
+    public void startGame()
     {
-        while (true)
-        {
-            if (areAllShipsPlaced())
-            {
-                //start rounds
-                
-
-            }
-            yield return null; 
-        }
+        isMyTurn = true;
     }
 
-    void fireShot()
+    
+
+    public void fireShot()
     {
 
     }
 
-    IEnumerator updateTimer()
-    {
-        while(isMyTurn)
-        {
-
-        }
-
-        yield return null;
-    }
+    
 
 
 
@@ -271,8 +256,11 @@ public class gameManager : MonoBehaviour
 
     public BattleshipGrid playerGrid, enemyGrid;
 
-    GameObject rowLabel, rowL, buttonPrefab,timerText;
+    GameObject rowLabel, rowL, buttonPrefab,timerText,theTimer;
 
+    gameSession session;
+
+    bool timerrunning = false;
 
 
     GameObject sq;
@@ -282,6 +270,58 @@ public class gameManager : MonoBehaviour
     public Ship currentlySelectedShip;
 
 
+
+    public IEnumerator myTurn()
+    {
+        timerText.GetComponentInChildren<Text>().text = "00:00";
+        while (true)
+        {
+            if (session.areAllShipsPlaced())
+            {
+                //start rounds
+               
+                    //update timer (running at the same time different speed)
+                    if (!timerrunning)
+                     StartCoroutine(updateTimer());
+
+                    //wait for player to play a shot
+
+                    //check if hit
+
+                    //if hit continue, if not stop
+               
+
+
+            }
+            yield return null;
+        }
+
+    }
+
+    public IEnumerator updateTimer()
+    {
+        float timerValue = 0f;
+     
+        Text clockText = theTimer.GetComponentInChildren<Text>();
+
+        timerrunning = true;
+
+       // clockText.text = "00:00";
+        while (session.isMyTurn)
+        {
+            timerValue++;
+
+            float minutes = timerValue / 60f;
+            float seconds = timerValue % 60f;
+
+            clockText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+
+            //code that is running every second
+            yield return new WaitForSeconds(1f);
+        }
+        yield return null;
+    }
 
 
 
@@ -301,6 +341,8 @@ public class gameManager : MonoBehaviour
 
 
     }
+
+
 
 
 
@@ -432,11 +474,15 @@ public class gameManager : MonoBehaviour
         enemyGrid.parent.transform.localScale = new Vector3(1.5f, 1.5f);
 
 
-        GameObject theTimer = Instantiate(timerText, new Vector3(9f, 8f), Quaternion.identity);
+        theTimer = Instantiate(timerText, new Vector3(-18f, 19f), Quaternion.identity);
 
-        gameSession session = new gameSession(allships,theTimer);
+       session = new gameSession(allships);
 
-        StartCoroutine(session.checkIfMyTurn());
+        session.startGame();
+        StartCoroutine(myTurn());
+
+
+      
     }
 
 
