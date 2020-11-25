@@ -230,6 +230,8 @@ public class gameSession
     public gameSession(Ship[] allShips)
     {
         theShips = allShips;
+        isMyTurn = false;
+        gameStarted = false;
     }
 
     public bool areAllShipsPlaced()
@@ -247,6 +249,7 @@ public class gameSession
     public void startGame()
     {
         isMyTurn = true;
+        gameStarted = true;
     }
 
     
@@ -295,15 +298,18 @@ public class gameManager : MonoBehaviour
                 //start rounds
                
                     //update timer (running at the same time different speed)
-                    if (!timerrunning)
-                     StartCoroutine(updateTimer());
+                    if (!timerrunning) {
+                    session.startGame();
+                    StartCoroutine(updateTimer());
+                    
+                }
 
-                    //wait for player to play a shot
+                //wait for player to play a shot
 
-                    //check if hit
+                //check if hit
 
-                    //if hit continue, if not stop
-               
+                //if hit continue, if not stop
+
 
 
             }
@@ -321,20 +327,23 @@ public class gameManager : MonoBehaviour
         timerrunning = true;
 
        // clockText.text = "00:00";
-        while (session.isMyTurn)
-        {
-            timerValue++;
+       while (true) { 
+            if (session.isMyTurn)
+            {
+                timerValue++;
 
-            float minutes = timerValue / 60f;
-            float seconds = timerValue % 60f;
+                float minutes = timerValue / 60f;
+                float seconds = timerValue % 60f;
 
-            clockText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+                clockText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
 
-            //code that is running every second
-            yield return new WaitForSeconds(1f);
+                //code that is running every second
+                yield return new WaitForSeconds(1f);
+            }
+            yield return null;
         }
-        yield return null;
+        
     }
 
 
@@ -491,7 +500,7 @@ public class gameManager : MonoBehaviour
 
        session = new gameSession(allships);
 
-        session.startGame();
+        
         StartCoroutine(myTurn());
 
 

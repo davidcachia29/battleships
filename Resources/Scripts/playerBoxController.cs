@@ -25,23 +25,26 @@ public class playerBoxController : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            //horizontal
-            Debug.Log("Horizontal: "+indexX + " " + indexY);
+        if (!gm.session.gameStarted)
+        { 
+            if (Input.GetMouseButtonDown(0))
+            {
+                //horizontal
+                Debug.Log("Horizontal: "+indexX + " " + indexY);
 
-            gm.currentlySelectedShip.place(indexX, indexY, false,gm.playerGrid);
+                gm.currentlySelectedShip.place(indexX, indexY, false,gm.playerGrid);
 
 
-          //  flipColor();
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            //horizontal
-            Debug.Log("Vertical: " + indexX + " " + indexY);
+              //  flipColor();
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                //horizontal
+                Debug.Log("Vertical: " + indexX + " " + indexY);
 
-            gm.currentlySelectedShip.place(indexX, indexY, true,gm.playerGrid);
-          //  flipColor();
+                gm.currentlySelectedShip.place(indexX, indexY, true,gm.playerGrid);
+              //  flipColor();
+            }
         }
 
 
