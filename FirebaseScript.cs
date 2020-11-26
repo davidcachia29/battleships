@@ -7,6 +7,7 @@ using Firebase.Unity.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -66,7 +67,7 @@ public class FirebaseScript : MonoBehaviour
 
 
 
-        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(
+        Task createusertask = auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(
              //created an anonymous inner class inside continueonmainthread which is of type Task
              createUserTask =>
              {
@@ -93,13 +94,16 @@ public class FirebaseScript : MonoBehaviour
              }
              );
 
-        while (!usercreated)
-        {
+        //while (!usercreated)
+        // {
 
-            yield return null;
-        }
+        //    yield return null;
+        // }
         //this is where my user has been created
         //Debug.Log("ready!!!");
+
+        //*a better way to wait until the end of the coroutine*//
+        yield return new WaitUntil(() => createusertask.IsCompleted);
 
 
 
@@ -112,7 +116,7 @@ public class FirebaseScript : MonoBehaviour
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
 
 
-        auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(
+        Task signintask = auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(
              signInTask =>
              {
                  if (signInTask.IsCanceled)
@@ -133,11 +137,14 @@ public class FirebaseScript : MonoBehaviour
                  userloggedin = true;
              }
             );
+        /*
         while (!userloggedin)
         {
 
             yield return null;
-        }
+        }*/
+
+        yield return new WaitUntil(() => signintask.IsCompleted);
 
         Debug.Log("User has signed in");
 
@@ -151,7 +158,7 @@ public class FirebaseScript : MonoBehaviour
     //get the number of records for a child
     IEnumerator getNumberOfRecords()
     {
-        reference.GetValueAsync().ContinueWithOnMainThread(
+       Task numberofrecordstask =  reference.GetValueAsync().ContinueWithOnMainThread(
             getValueTask =>
             {
                 if (getValueTask.IsFaulted)
@@ -170,9 +177,11 @@ public class FirebaseScript : MonoBehaviour
 
             }
             );
-
+        /*
         while (!numberofrecordsretreived)
-            yield return null;
+            yield return null;*/
+
+        yield return new WaitUntil(() => numberofrecordstask.IsCompleted);
 
 
     }
@@ -180,7 +189,7 @@ public class FirebaseScript : MonoBehaviour
     IEnumerator getDataFromFirebase(string childLabel)
     {
 
-        reference.Child(childLabel).GetValueAsync().ContinueWithOnMainThread(
+        Task getdatatask = reference.Child(childLabel).GetValueAsync().ContinueWithOnMainThread(
             getValueTask =>
             {
                 if (getValueTask.IsFaulted)
@@ -205,12 +214,14 @@ public class FirebaseScript : MonoBehaviour
             }
             );
         //shock absorber
-        while (!displaydata)
-        {
-            //the data has NOT YET been saved to snapshot
-            yield return null;
+        /* while (!displaydata)
+         {
+             //the data has NOT YET been saved to snapshot
+             yield return null;
 
-        }
+         }*/
+
+        yield return new WaitUntil(() => getdatatask.IsCompleted);
 
         //the data has been saved to snapshot here
         yield return StartCoroutine(displayData());
