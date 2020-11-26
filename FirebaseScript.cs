@@ -227,6 +227,48 @@ public class FirebaseScript : MonoBehaviour
         yield return StartCoroutine(displayData());
     }
 
+
+    IEnumerator getAllDataFromFirebase()
+    {
+
+        Task getdatatask = reference.GetValueAsync().ContinueWithOnMainThread(
+            getValueTask =>
+            {
+                if (getValueTask.IsFaulted)
+                {
+                    Debug.Log("Error getting data " + getValueTask.Exception);
+                }
+
+                if (getValueTask.IsCompleted)
+                {
+                    DataSnapshot snapshot = getValueTask.Result;
+                    //Debug.Log(snapshot.Value.ToString());
+
+                    //snapshot object is casted to an instance of its type
+                    myDataDictionary = (Dictionary<string, object>)snapshot.Value;
+
+
+                    //    Debug.Log("Data received");
+                    displaydata = true;
+                }
+
+
+            }
+            );
+        //shock absorber
+        /* while (!displaydata)
+         {
+             //the data has NOT YET been saved to snapshot
+             yield return null;
+
+         }*/
+
+        yield return new WaitUntil(() => getdatatask.IsCompleted);
+
+        //the data has been saved to snapshot here
+        yield return StartCoroutine(displayData());
+    }
+
     IEnumerator displayData()
     {
         foreach (var element in myDataDictionary)
@@ -276,12 +318,14 @@ public class FirebaseScript : MonoBehaviour
         yield return getNumberOfRecords();
         Debug.Log(numberOfRecords);
 
-        for (int i = 0; i <= numberOfRecords; i++)
-        {
-            string childstring = "Player" + (i + 1);
-          //  Debug.Log(childstring);
-            yield return getDataFromFirebase(childstring);
-        }
+        // for (int i = 0; i <= numberOfRecords; i++)
+        // {
+        //      string childstring = "Player" + (i + 1);
+        //  Debug.Log(childstring);
+        //     yield return getDataFromFirebase(childstring);
+        //  }
+
+        yield return getAllDataFromFirebase();
 
         Debug.Log("All records retreived");
 
