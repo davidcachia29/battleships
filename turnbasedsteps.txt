@@ -1,0 +1,30 @@
+Turn based sequence for battleships
+-----------------------------------
+
+Player 1 Places ships...game is stopped
+Player 2 Place ships...game is stopped
+
+Once both players have placed the ships, the game can start
+
+player1placed (boolean)
+player2placed (boolean)
+
+At this point we need to save the positions of the ships on firebase*
+
+1. We need a coroutine CONSTANTLY checking the database to see if 
+player 1 AND player 2 have all placed their ships.
+
+We also need to display who has placed all of his ships.
+
+after both have been placed, the game can start
+
+2. We need to (randomly) select which player starts
+
+3. We need to give Player X some time to shoot (he can shoot one shot)
+
+4. Player X can hit, in which case he gets another shot, or he doesn't, in which case it's the other player's turn.
+
+5. Other player shoots and executes 4.
+
+6. All the ships for one player are sunk.  Player loses.
+
